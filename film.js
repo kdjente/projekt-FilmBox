@@ -23,7 +23,7 @@ const filmy = [
 		ochutnavka: 'Český krimi thriller s Karlem Rodenem.',
 		popis:
 			'Šokující živé vysílaní, které během chvíle změní životy několika nevinných lidí. Radek (Karel Roden) se po téměř dvaceti letech nečekaně vrací do svého rodného města, aby zde nalezl jistou mladou ženu a jednou provždy se vyrovnal se svou minulostí. V pátrání po neznámé ženě mu pomáhá Eva, ambiciózní rozhlasová moderátorka, která jeho příběh dostane do své živě vysílané noční show. Chtěla mít ve vysílání senzační událost, ale k jejímu zděšení a ke zděšení všech posluchačů začne na povrch vyplouvat něco, s čím nikdo nepočítal. Svůj plán připravoval Radek několik let a během jeho vyprávění je do pochmurného příběhu vtažena nejen ona sama, ale i pražská kriminálka a další aktéři dlouho zapomenutých událostí. Začíná napínavý boj o čas a o spravedlnost. Opravdu už je vše nenávratně promlčeno? (csfd.cz, Bontonfilm)',
-		premiera: '2022-04-28',
+		premiera: '2024-04-28',
 	},
 	{
 		id: 'ona',
@@ -36,7 +36,7 @@ const filmy = [
 		ochutnavka: 'Romantické Sci-Fi z blízké budoucnosti',
 		popis:
 			'Děj snímku Her se odehrává v Los Angeles v nedaleké budoucnosti. Theodore (Joaquin Phoenix) je komplikovaný a citlivý muž, který se živí psaním dojemných a osobních dopisů pro druhé. Se zlomeným srdcem po ukončení dlouhého vztahu se začne zajímat o nový, pokročilý operační systém, o kterém jeho výrobce tvrdí, že představuje zcela unikátní a intuitivní bytost. Po jeho instalaci se seznamuje se „Samanthou", umělou inteligencí s milým ženským hlasem (Scarlett Johansson), která má zajímavé postřehy, je citlivá a překvapivě vtipná. Jak její potřeby a požadavky rostou společně s těmi jeho, mění se jejich přátelství ve skutečnou vzájemnou lásku. (csfd.cz, Falcon)',
-		premiera: '2013-12-18',
+		premiera: '2023-12-08',
 	},
 	{
 		id: 'rrrrrrr',
@@ -104,3 +104,85 @@ const filmy = [
 		premiera: '2022-12-24',
 	},
 ]
+
+const idFilmu = location.hash.substring(1)
+
+//console.log(idFilmu)
+
+let film
+filmy.forEach((porovnavanyFilm) => {
+ if (porovnavanyFilm.id === idFilmu) {
+  film = porovnavanyFilm
+ }
+})
+
+//console.log(film)
+
+let detailFilmu = document.querySelector("#detail-filmu")
+let obrazok = detailFilmu.querySelector('img')
+
+obrazok.src = film.plakat.url
+obrazok.width = film.plakat.sirka
+obrazok.height = film.plakat.vyska
+detailFilmu.querySelector('.card-title').textContent = film.nazev
+detailFilmu.querySelector('.card-text').textContent = film.popis
+
+
+const premiere = document.querySelector("#premiera")
+const premieraDate = dayjs(film.premiera).format("D.M.YYYY")
+const dnes = dayjs()
+const kolikDni = dayjs(film.premiera).diff(dayjs(), "days")
+
+let premieraDni;
+
+if (kolikDni < 0 ) {
+	premieraDni = `bylo pred ${-kolikDni} dny.`
+} else if (kolikDni > 0){
+	premieraDni = `je za ${kolikDni} dní.`
+} else {
+	premieraDni = `je dnes.`
+}
+
+
+premiere.innerHTML = `Premiéra <strong>${premieraDate}</strong>, což ${premieraDni}`
+
+
+let hvezdicky = document.querySelectorAll(".fa-star")
+let indexVybranejHvezdicky
+
+// const zafarbi = (index) => {
+// 	let i = 0;
+// 	while(i <= index) {
+// 		hvezdicky[i].classList.remove("far")
+// 		hvezdicky[i].classList.add("fas")
+// 		i++
+// 	}
+// }
+
+const zafarbi2 = (index) => {
+	hvezdicky.forEach((hvezda, s) => {
+		if (s <= index) {
+			hvezda.classList.remove("far")
+			hvezda.classList.add("fas")
+		} else {
+			hvezda.classList.add("far")
+			hvezda.classList.remove("fas")
+		}
+	})
+}
+
+hvezdicky.forEach((hvezda, index) => {
+	hvezda.addEventListener('click', () => {
+		zafarbi2(index)
+		indexVybranejHvezdicky = index
+	})
+})
+
+hvezdicky.forEach((hvezda, index) => {
+	hvezda.addEventListener('mouseenter', () => {
+		zafarbi2(index)
+	})
+	hvezda.addEventListener('mouseleave', () => {
+		zafarbi2(indexVybranejHvezdicky)
+	})
+})
